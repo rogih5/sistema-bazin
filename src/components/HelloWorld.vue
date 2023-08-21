@@ -11,7 +11,7 @@ defineProps({
   <div class="greetings">
     <h1 class="green">{{ msg }}</h1>
     <h3>
-      Estou desenvolvendo um Sistema para se basear no calculo de basin para ações.
+      Estou desenvolvendo um Sistema para se basear no cálculo de Bazin para ações.
     </h3>
   </div>
 </template>

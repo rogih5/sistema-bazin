@@ -1,45 +1,76 @@
 <template>
-    <div>
-      <input v-model="newBase" placeholder="Nome da Ação" v-if="!baseSet">
-      <button @click="setBase" v-if="!baseSet">Adicionar Nome</button>
-  
-      <input v-model="newYear" placeholder="Ano" v-if="baseSet">
-      <input v-model="newValue" placeholder="Valor do Dividendo" v-if="baseSet">
-      <button @click="addValue" v-if="baseSet">Adicionar Valor</button>
+  <div class="value-input-container">
+    <div v-if="!baseSet">
+      <input class="input-field" v-model="actionName" placeholder="Nome da Ação">
+      <input class="input-field" v-model.number="actionValue" placeholder="Valor da Ação">
+      <button class="action-button" @click="setBase">Adicionar Nome e Valor</button>
     </div>
-  </template>
-  
-  <script>
-  export default {
-    data() {
-      return {
-        newBase: '',
-        newYear: '',
-        newValue: '',
-        baseSet: false,
-        selectedBase: '',
-      };
+    <div v-if="baseSet">
+      <input class="input-field" type="number" v-model="newYear" placeholder="Ano" min="2000" max="2099">
+      <input class="input-field" type="number" v-model.number="newValue" placeholder="Valor do Dividendo">
+      <button class="action-button" @click="addValue">Adicionar Valor</button>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      actionName: '',
+      actionValue: '',
+      newYear: '',
+      newValue: '',
+      baseSet: false,
+      selectedBase: '',
+    };
+  },
+  methods: {
+    addValue() {
+      if (this.newYear && this.newValue !== '') {
+        const newEntry = {
+          base: this.actionName,
+          actionValue: this.actionValue,
+          year: this.newYear,
+          dividendValue: this.newValue,
+        };
+        this.$emit('value-added', newEntry);
+        this.newYear = '';
+        this.newValue = '';
+      }
     },
-    methods: {
-      addValue() {
-        if (this.newYear.trim() !== '' && this.newValue.trim() !== '') {
-          const newEntry = {
-            base: this.selectedBase,
-            year: this.newYear,
-            dividendValue: this.newValue,
-          };
-          this.$emit('value-added', newEntry);
-          this.newYear = '';
-          this.newValue = '';
-        }
-      },
-      setBase() {
-        if (this.newBase.trim() !== '') {
-          this.baseSet = true;
-          this.selectedBase = this.newBase;
-        }
-      },
+    setBase() {
+      if (this.actionName.trim() !== '' && this.actionValue !== '') {
+        this.baseSet = true;
+      }
     },
-  };
-  </script>
-  
+  },
+};
+</script>
+
+<style scoped>
+.value-input-container {
+  margin: 20px;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+}
+
+.input-field {
+  margin: 10px 0;
+  padding: 10px;
+  width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
+
+.action-button {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
+</style>
